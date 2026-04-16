@@ -1126,6 +1126,42 @@ chsh -s /bin/bash
 
 
 
+## Berechtigungen
+
+
+
+
+(- - kein Recht gesetzt)
+
+r - lesen
+w - schreiben
+x - ausführen
+
+user
+group
+others
+
+### Rechtevergabe
+
+#### symbolische Rechtevergabe
+
+#### numerische Rechtevergabe
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
