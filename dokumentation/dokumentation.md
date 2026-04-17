@@ -994,15 +994,372 @@ Es gibt mehrere Terminal-Multiplexer:
 
 ## Reguläre Ausdrücke
 
-TODO
+Reguläre Ausdrücke (engl. *Regular Expressions*, kurz *Regex* oder *RegEx*) sind Zeichenketten, die ein Suchmuster beschreiben. Sie werden verwendet, um Text zu durchsuchen, zu validieren oder zu ersetzen. Regex ist in vielen Programmiersprachen und Tools verfügbar.
+
+### 2. Grundlegende Syntax
+
+#### Literale Zeichen
+
+Die meisten Zeichen matchen sich selbst. Das Muster `cat` findet die Zeichenfolge `"cat"` im Text.
+
+#### Metazeichen
+
+Spezielle Zeichen mit besonderer Bedeutung:
+
+| Zeichen | Bedeutung |
+|---------|-----------|
+| `.` | Beliebiges einzelnes Zeichen (außer Zeilenumbruch) |
+| `^` | Anfang der Zeile |
+| `$` | Ende der Zeile |
+| `*` | 0 oder mehr Wiederholungen |
+| `+` | 1 oder mehr Wiederholungen |
+| `?` | 0 oder 1 Wiederholung (optional) |
+| `\|` | Oder (Alternative) |
+| `\` | Escape-Zeichen (für Metazeichen) |
+
+### 3. Zeichenklassen
+
+Zeichenklassen ermöglichen das Matchen von Zeichen aus einer bestimmten Menge.
+
+| Muster | Bedeutung |
+|--------|-----------|
+| `[abc]` | Eines der Zeichen a, b oder c |
+| `[^abc]` | Alles außer a, b oder c |
+| `[a-z]` | Alle Kleinbuchstaben von a bis z |
+| `[A-Z]` | Alle Großbuchstaben von A bis Z |
+| `[0-9]` | Alle Ziffern von 0 bis 9 |
+| `\d` | Ziffer (entspricht [0-9]) |
+| `\D` | Keine Ziffer (entspricht [^0-9]) |
+| `\w` | Wortzeichen (a-z, A-Z, 0-9, _) |
+| `\W` | Kein Wortzeichen |
+| `\s` | Whitespace (Leerzeichen, Tab, Zeilenumbruch) |
+| `\S` | Kein Whitespace |
+
+### 4. Quantifizierer
+
+Quantifizierer geben an, wie oft ein Zeichen oder eine Gruppe vorkommen soll.
+
+| Muster | Bedeutung |
+|--------|-----------|
+| `{n}` | Genau n Wiederholungen |
+| `{n,}` | Mindestens n Wiederholungen |
+| `{n,m}` | Zwischen n und m Wiederholungen |
+| `*?` | Nicht-gieriger Match (so wenig wie möglich) |
+| `+?` | Nicht-gieriger Match (so wenig wie möglich) |
+
+### 5. Gruppen und Rückverweise
+
+| Muster | Bedeutung |
+|--------|-----------|
+| `(abc)` | Erfassungsgruppe (speichert Match) |
+| `\1`, `\2` | Rückverweis auf Gruppe 1, 2 usw. |
+
+### 6. Anker und Grenzen
+
+| Muster | Bedeutung |
+|--------|-----------|
+| `\b` | Wortgrenze |
+| `\B` | Keine Wortgrenze |
+
+### 7. Praktische Beispiele
+
+| Aufgabe | Regex |
+|---------|-------|
+| E-Mail-Adresse | `^[\w.-]+@[\w.-]+\.\w{2,}$` |
+| Telefonnummer (DE) | `^\+?49\s?\d{3,4}\s?\d{6,8}$` |
+| URL | `https?://[\w.-]+\.[a-z]{2,}` |
+| Datum (DD.MM.YYYY) | `^(0[1-9]\|[12][0-9]\|3[01])\.(0[1-9]\|1[0-2])\.\d{4}$` |
+| Postleitzahl (DE) | `^\d{5}$` |
+| IP-Adresse (IPv4) | `^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$` |
+| Hexadezimalfarbe | `^#?([A-Fa-f0-9]{6}\|[A-Fa-f0-9]{3})$` |
+
+### 10. Nützliche Links dazu
+
+- **regex101.com** - Interaktiver Regex-Tester mit Erklärungen
+- **regexr.com** - Weiterer Regex-Tester mit Community-Mustern
+- **regexcrossword.com** - Spielerisch Regex lernen
+- **Regular-Expressions.info** - Umfassende Dokumentation
 
 ## Verzeichnisstruktur / FHS
 
-TODO
+| Verzeichnis | Bedeutung | enthält |
+| ----------- |:-------------: | --------- |
+| `/bin` | *binary* |  ausführbare Dateien, die von allen Benutzern ausgeführt werden können. Normalerweise ein *Symlink* auf `/usr/bin`. |
+| `/sbin` | *superuser binary* |  auch ausführbare Dateien, die allerdings nur von `root` genutzt werden können. Auch ein Symlink auf `/usr/sbin`. |
+| `/boot` | |  den/die Linux Kernel (`vmlinuz-6.1.0-25.amd64`), die zugehörige Initiale RAM Disk (`initrd.img-6.1.0-25-amd64`), weitere für den Bootvorgang wichtige Dateien und die Konfiguration des Bootloaders, z.B. `grub`. |
+| `/dev` | *devices* |  *Gerätedateien*, z.B. für die vorhanden Speichermedien und Partitionen, `/dev/null`, `/dev/random`, die Filedescriptoren `stdin`, `stdout`, `stderr`, Terminals etc. Dieses Verzeichnis wird automatisch vom Dienst `udev` (*Userspace Dev*) überwacht und gepflegt. |
+| `/etc` | *et cetera* / *etsy* |  systemweite Konfigurationsdateien. Diese können für gewisse Programme durch die benutzerspezifischen Konfigurationsdateien (im Heimatverzeichnis der Benutzer) überschrieben werden (`/etc/bash.bashrc` -> `~/.bashrc`). |
+| `/home` | | Heimatverzeichnisse der regulären Benutzer |
+| `/media` `/mnt` | *mount* |  Verzeichnisse für die *Mountpoints* weiterer/externer Datenträger |
+| `/opt` | *optional* | hier können Pakete ihre Dateien ablegen, die nicht über die Standardpaketquellen installiert wurden |
+| `/proc` | *processes* |  Dateien/Informationen über das laufende System: laufende Prozesse, Hardware, Kernelkonfiguration. Existiert nur im RAM, ist ein sog. *virtuelles* oder *Pseudodateisystem* |
+| `/root` | | Heimatverzeichnis des *Superusers* `root` |
+| `/sys` | *system* | ähnlich wie `/proc` bzw. eine nachträgliche Erweiterung,  vor allem Dateien/Informationen zur Hardware, auch ein *virtuelles-* bzw. *Pseudodateisystem*. |
+| `/tmp` | *temp* |  temporäre Dateien |
+| `/usr` | *Unix System Resources* |  Verzeichnisse für die ausführbaren Dateien, Libraries, Source Code, Dokumentationen etc. |
+| `/var` | *variable* |  viele wichtige Dateien wie z.B. *Logdateien* (`/var/log`), E-Mails (`/var/mail`), Cache (`/var/cache`) ... |
 
 ## Dateien finden
 
-TODO
+### locate
+
+Durchsucht das Dateisystem nach einem *Pattern* bzw. Suchbegriff.
+
+`locate` ist sehr schnell, denn es durchsucht eine Datenbank (also eine Art Index/Glossar), die Suche ist so deutlich schneller möglich, als wenn jede Datei einzeln angeschaut werden müsste.
+
+Die Datenbank wird vom System über einen sog. `cronjob`/*Systemd Timer* automatisch periodisch erneuert.
+
+Manuell können wir die Datenbank mit dem Kommando `updatedb` aktualisieren. Dafür sind `root` Rechte nötig.
+
+`locate` hat einige Optionen, die wichtigste davon ist vielleicht 
+
+- `-i` (*ignore-case*),
+- `-e` auch ohne die Aktualisierung der Datenbank werden nur existierende Dateien angezeigt. 
+- `-r` so können wir `locate` einen Regulären Ausdruck zur Suche übergeben. Hier ist die Optionn `-R` auch noch interessant, um den verwendeten RegEx Dialekt anzugeben
+
+Es kann sehr sinnvoll sein, die Ergebnisse von `locate` nachträglich mit Tools wie z.B. `grep` zu filtern
+
+### find
+
+#### Grundlegende Syntax
+```bash
+find [Pfad] [Optionen] [Aktionen]
+```
+Das `find`-Kommando durchsucht Verzeichnisbäume nach Dateien und Verzeichnissen, die bestimmte Kriterien erfüllen.
+
+Das Kommando `find` ohne Argumente liefert eine (rekursive) Liste aller Dateien und Verzeichnisse im aktuellen Verzeichnis.
+
+Das erste Argument was wir `find` übergeben (müssen) ist das Startverzeichnis für die Suche.
+
+```bash
+# Alle Dateien im aktuellen Verzeichnis und Unterverzeichnissen
+find
+find .
+
+# Alle Dateien in /home
+find /home
+```
+Die Suche lässt sich nach vielen Kriterien verfeinern. In der Manpage von `find` wird von *Tests* gesprochen (-> Suche nach `TESTS`). Wir testen also alle Dateien, ob sie bestimmten Kriterien genügen.
+
+Der Test `-name` (**ein** Minuszeichen, nicht zwei) sucht z.B. nach Dateinamen. Wildcards werden akzeptiert, wir müssen nur darauf achten, dass die Shell das `*` nicht als Globbing Character interpretiert und es dementsprechend maskieren, so dass es an `find` durchgereicht wird.
+
+#### Suche nach Dateien mit der Endung `.txt`
+```bash
+find . -name "*.txt"
+
+# Case-insensitive Suche
+find . -iname "*.TXT"
+```
+
+#### Suche nach Dateiyyp
+
+| Option | Bedeutung |
+|--------|-----------|
+| `-type f` | Nur Dateien |
+| `-type d` | Nur Verzeichnisse |
+| `-type l` | Nur symbolische Links |
+
+**Beispiele:**
+
+```bash
+# Nur Dateien nach regulären Dateien suchen
+find /var/log -type f
+
+# Nur nach Verzeichnisse suchen
+find . -type d
+
+# Nur nach Symbolischen Links suchen
+find /usr -type l
+```
+
+#### Suche nach Namen
+
+| Option | Bedeutung |
+|--------|-----------|
+| `-name "muster"` | Exakte Übereinstimmung (case-sensitive) |
+| `-iname "muster"` | Case-insensitive |
+| `-path "muster"` | Suche im gesamten Pfad |
+
+**Beispiele:**
+
+```bash
+# Alle .log-Dateien
+find /var/log -name "*.log"
+
+# Case-insensitive
+find . -iname "readme.txt"
+
+# Pfad-Muster
+find . -path "*/config/*.conf"
+```
+
+#### Suche nach Dateigröße
+
+| Option | Bedeutung |
+|--------|-----------|
+| `-size n` | Genau n Blöcke (512 Bytes) |
+| `-size +n` | Größer als n |
+| `-size -n` | Kleiner als n |
+
+**Einheiten:**
+- `c` - Bytes
+- `k` - Kilobytes
+- `M` - Megabytes
+- `G` - Gigabytes
+
+**Beispiele:**
+
+```bash
+# Dateien größer als 100 MB
+find . -size +100M
+
+# Dateien kleiner als 1 KB
+find . -size -1k
+
+# Dateien mit genau 512 Bytes
+find . -size 512c
+
+# Leere Dateien
+find . -size 0
+```
+
+#### Suche nach Zeit
+
+| Option | Bedeutung |
+|--------|-----------|
+| `-mtime n` | Geändert (m -> modified) vor n Tagen |
+| `-mtime +n` | Geändert vor mehr als n Tagen |
+| `-mtime -n` | Geändert in den letzten n Tagen |
+| `-atime n` | Zugegriffen (a -> accessed) vor n Tagen |
+| `-ctime n` | Status geändert (c -> changed) vor n Tagen |
+
+**Minuten statt Tage:**
+- `-mmin` - Änderungszeit in Minuten
+- `-amin` - Zugriffszeit in Minuten
+- `-cmin` - Statusänderung in Minuten
+
+**Beispiele:**
+
+```bash
+# Dateien, die in den letzten 7 Tagen geändert wurden
+find . -mtime -7
+
+# Dateien, die vor mehr als 30 Tagen geändert wurden
+find . -mtime +30
+
+# Dateien, die in den letzten 60 Minuten geändert wurden
+find . -mmin -60
+```
+#### Suche nach Berechtigungen
+
+```bash
+# Dateien mit genau 644
+find . -perm 644
+
+# Dateien mit mindestens 644
+find . -perm -644
+
+# Ausführbare Dateien
+find . -perm /111
+
+# Dateien mit SUID-Bit
+find / -perm -4000
+```
+
+#### Suche nach Eigentümer
+
+```bash
+# Dateien von Benutzer "john"
+find /home -user john
+
+# Dateien von Gruppe "developers"
+find /var -group developers
+```
+
+#### Logische Operatoren
+
+| Operator | Bedeutung |
+|----------|-----------|
+| `-and` oder `-a` | UND (Standard) |
+| `-or` oder `-o` | ODER |
+| `-not` oder `!` | NICHT |
+| `( ... )` | Gruppierung |
+
+**Beispiele:**
+
+```bash
+# .txt ODER .pdf Dateien
+find . -name "*.txt" -o -name "*.pdf"
+
+# .log Dateien UND größer als 10MB
+find . -name "*.log" -and -size +10M
+
+# Keine .tmp Dateien
+find . -not -name "*.tmp"
+
+# Komplexe Bedingung mit Gruppierung
+find . \( -name "*.txt" -o -name "*.pdf" \) -and -size +1M
+```
+
+#### Aktionen
+
+Mit *Tests* können wir die Suche eingrenzen, bzw. jede vorhandenen Datei auf bestimmmte Kriterien testen. Auf die so gefundennen Dateien können wir sog. *Aktionan* anwenden:
+
+| Option | Bedeutung |
+|--------|-----------|
+| `-print` | Ausgabe (Standard) |
+| `-ls` | Detaillierte Ausgabe wie ls -l |
+| `-delete` | Dateien löschen (Vorsicht!) |
+| `-exec cmd {} \;` | Kommando für jede Datei ausführen |
+| `-exec cmd {} +` | Kommando mit mehreren Dateien |
+| `-ok cmd {} \;` | Wie -exec, aber mit Bestätigung |
+
+**Beispiele:**
+
+```bash
+# Alle .tmp Dateien löschen
+find . -name "*.tmp" -delete
+
+# Berechtigungen ändern
+find . -type f -exec chmod 644 {} \;
+
+# Dateien verschieben
+find . -name "*.log" -exec mv {} /backup/ \;
+
+# Mit Bestätigung
+find . -name "*.bak" -ok rm {} \;
+
+# Mehrere Dateien gleichzeitig (effizienter)
+find . -name "*.txt" -exec grep "error" {} +
+```
+
+#### einige Beispiele
+
+```bash
+# Alle .jpg Bilder größer als 5MB im Verzeichnis Pictures
+find ~/Pictures -name "*.jpg" -size +5M
+
+# Alte Log-Dateien löschen (älter als 30 Tage)
+find /var/log -name "*.log" -mtime +30 -delete
+
+# Alle Python-Dateien durchsuchen
+find . -name "*.py" -exec grep -H "import os" {} \;
+
+# Dateien mit bestimmten Berechtigungen finden
+find /var/www -type f ! -perm 644
+
+# Dateien grösser als 100MB finden (Top 10)
+find / -type f -size +100M -exec ls -lh {} \; | sort -k5 -h | tail -10
+
+# Doppelte Dateinamen finden
+find . -type f -printf "%f\n" | sort | uniq -d
+
+# Backup aller .conf Dateien
+find /etc -name "*.conf" -exec cp {} /backup/ \;
+
+# Alle ausführbaren Dateien finden
+find /usr/bin -type f -executable
+```
 
 ## Benutzerkonten
 
@@ -1122,48 +1479,469 @@ Mit `chsh` kann ein Benutzer seine Login Shell ändern bzw. kann `root` die Logi
 chsh -s /bin/bash
 ```
 
-
-
-
-
 ## Berechtigungen
 
+Berechtigungen in Linux steuern den Zugriff auf Dateien und Verzeichnisse für *Benutzer* und *Gruppen*. Sie legen fest, wer lesen (`r`), schreiben (`w`) und ausführen (`x`) darf.
+
+Der folgende Auszug von `ls -l file1.txt` sagt folgendes aus:
+```bash
+  u  g  o
+-rw-r--r-- 1 tux tux 5 Feb 12 13:09 file1.txt
+```
+- Der User/Besitzer (`u`) darf den Inhalt der Datei lesen und ändern (`rw`)
+- Mitglieder der Gruppe (`g`) dürfen den Inhalt der Datei nur lesen (`r`)
+- Alle anderen Benutzer, die weder der Besitzer, noch Mitglieder der Gruppe sind, dürfen den Inhalt der Datei lesen (`r`)
+
+### Bedeutung der Berechtigungen für Dateien
+
+`r` (*read*) -> Dateiinhalt lesen
+`w` (*write*) -> Dateiinhalt ändern -> aber **nicht** Datei löschen
+`x` (*eXecute*) -> Datei ausführen
+
+### Bedeutung der Berechtigungen für Verzeichnisse
+
+`r` (*read*) -> Verzeichnisinhalt lesen bzw. das Auflisten der Namen der Dateien
+`w` (*write*) -> Verzeichnisinhalt ändern -> Dateien erstellen, verschieben und löschen
+`x` (*eXecute*) -> Verzeichnis betreten 
+
+>[!IMPORTANT] 
+> Es macht **keinen wirklichen Sinn** wenn das *Execute Bit* bei Verzeichnissen **nicht** gesetzt ist. Dann wird alles etwas seltsam... Wir brauchen dieses Bit, damit Verzeichnisse wie gewünscht funktionieren.
+
+### Symbolische Rechtevergabe
+Hierbei werden *Symbole* für die Berechtigungen verwendet. Diese Art der Rechtevergabe ist sehr intuitiv und eignet sich besonders dafür, einzelne Berechtigungen hinzuzufügen oder zu entfernen, ohne die bestehenden Berechtigungen zu verändern. Es ist auch einfach, diese Vorgänge wieder rückgängig zu machen.
+
+#### Symbole
+
+`r` -> read
+`w` -> write
+`x` -> eXecute
+
+`u` -> user/owner
+`g` -> group
+`o` -> others (weder owner noch group)
+`a` -> all
+
+`+` -> hinzufügen
+`-` -> entziehen
+`=` -> setzten
+
+Der Gruppe Schreibrechte hinzufügen:
+```bash
+chmod g+w file1.txt
+```
+Dem Besitzer Leserechte entfernen:
+```bash
+chmod o-r file1.txt
+```
+Besitzer und Gruppe Schreib- und Leserechte
+```bash
+chmod ug+rw file1.txt
+```
+Dem Besitzer Ausführungsrechte hinzufügen, der Gruppe Schreibrechte entziehen, allen anderen Leserechte hinzufügen.
+```bash
+chmod u+x,g-w,o+r file1.txt
+```
+### Numerische/Oktale Rechtevergabe
+Die numerische oder oktale Rechtevergabe verwendet Zahlen des Oktalsystems, um Berechtigungen gleichzeitig für Besitzer, Gruppe und Others zu vergeben. 
+
+Es eignet sich besonders für Situationen, in denen wir eine Datei oder Verzeichnis in einen expliziten Zustand versetzten wollen.
+
+Interessant ist die Herkunft der Zahlen für die Berechtigungen. Übersetzen wir sie doch einmal ins Binärsystem:
+
+| Symbol | Okal | Binär |
+| ------ | ---- | ----- |
+| `r` | `4` | `100` |
+| `w` | `2` | `010` |
+| `x` | `1` | `001` |
+| `-` | `0` | `000` |
+
+Wir sehen, dass das gesetzte Bit *wandert* bzw. sich immer um eine Position verschiebt. Sehen wir uns das einmal im Listing von `ls -l` an:
+```bash
+  7  6  4
+ 111110100
+-rwxr--r-- 1 tux tux 5 Feb 12 13:09 file1.txt
+
+111 -> 7
+110 -> 6
+100 -> 4
+```
+Ist also ein bestimmtes Recht gesetzt, bedeutet dass, das hier binär auch eine `1` steht. Wir sehen sozusagen ein Abbild dessen, was wirklich im Speicher passiert. Toll, oder?
+
+### Sonderbits
+
+Zusätzlich gibt es noch drei Sonderbits, die gewisse Dinge ermöglichen, damit unser System funktioniert:
+
+#### SUID Bit
+
+Auf eine **ausführbare Binärdatei** gesetzt, bewirkt das SUID Bit, dass die Datei mit den Berechtigungen des **Besitzers** der Datei ausgeführt wird und **nicht** mit den Berechtigungen des aufrufenden Users.
 
 
+##### Beispiel `/etc/passwd`
+```bash
+ls -l /usr/bin/passwd
 
-(- - kein Recht gesetzt)
+-rwsr-xr-x 1 root root 68248 Feb 24  2025 /usr/bin/passwd
 
-r - lesen
-w - schreiben
-x - ausführen
+ls -l /etc/shadow
 
-user
-group
-others
+-rw-r----- 1 root shadow 1619 Feb 24 2025 /etc/shadow
+```
+Das Kommando kann also von einem regulären Benutzer ausgeführt werden, läuft dann aber mit den Rechten des Users `root` und kann somit den Inhalt der Datei `/etc/shadow` ändern.
 
-### Rechtevergabe
+#### SGID Bit
 
-#### symbolische Rechtevergabe
+Auf eine **ausführbare Binärdatei** gesetzt, bewirkt das SGID Bit, dass die Datei mit den Berechtigungen der **Gruppe** der Datei ausgeführt wird und **nicht** mit den Berechtigungen des aufrufenden Users.
 
-#### numerische Rechtevergabe
+Auf ein Verzeichnis gesetzt, bewirkt es, dass neu darin erstellte Dateien der Gruppe zugewiesen werden, der das Verzeichnis gehört und nicht der primären Gruppe des erstellenden Users.
 
+```bash
+ls -ld /var/mail
 
+drwxrwsr-x 2 root mail 4096 Feb 20 09:26 /var/mail/
+```
+So werden alle E-Mails der Gruppe `mail` zugeordnet und können vom Mailserver hinzugefügt und auch gelöscht werden.
 
+#### Sticky Bit
 
+Auf ein Verzeichnis gesetzt, bewirkt es, dass darin enthaltene Dateien nur noch vom Besitzer der Datei geändert oder gelöscht werden dürfen.
+```bash
+ls -ld tmp
 
+drwxrwxrwt 8 root root 4096 Feb 20 09:30 /tmp
+```
+So ist es einem regulären Benutzer nicht möglich, Dateien eines anderen Benutzers zu ändern oder zu löschen.
 
+## Links
 
+### Symbolische Links / Symlinks
+Sind im Prinzip das Gleiche wie Verknüpfungen unter Windows. Ein Symlink verweist auf eine andere Datei oder gesamtes Verzeichnis, genauer gesagt *auf den Pfad* zu einer Datei oder Verzeichnis. Es ist eine zusätzliche Inode, die auf ein Ziel verweist. Symlinks können auch über Partitionsgrenzen hinaus bestehen. Wird das Original gelöscht, bleibt ein sog. *toter* oder *verwaister* Link zurück, der nicht mehr funktioniert.
+```bash
+ln -s original.txt symlink.txt
+ln -s originalverzeichnis symlinkverzeichnis
+```
+Symlinks werden z.B. von Webservern genutzt: 
+- `/etc/apache2/sites-available` -> alle vorhandenen Konfigurationsdateien für Websites (Original)
+- `/etc/apache2/sites-enabled` -> nur die *aktiven* Konfigurationsdateien für Websites (Symlinks auf Dateien in `sites-available`)
 
+### Hardlinks
+Hardlinks sind eigentlich lediglich Dateinamen. Mehrere Dateinamen bzw. Hardlinks können auf den gleichen Bereich im Speicher bzw. die gleiche Datei/Inode zeigen. Ein Hardlink ist nicht mehr vom Original zu unterscheiden, er hat dieselbe Inode wie das Original. Wird das "Original" gelöscht, ist die Datei weiterhin über den "Link" bzw. jetzt neuen Dateinamen zu erreichen.
 
+Hardlinks funktionieren daher natürlich **nicht** auf Verzeichnisse oder über Partitionsgrenzen hinaus.
+```bash
+ln original.txt hardlink.txt
+```
+Man kann die Anzahl der Hardlinks mit `ls -l` sehen (Spalte direkt nach den Berechtigungen) bzw. in der Ausgabe des Kommandos `stat`:
+```bash
+ln file1.txt hardlink-file1
+ls -l file1.txt
 
+-rw-r--r-- 2 tux tux 5 Feb 12 13:09 file1.txt
+```
+```bash
+stat file1.txt
 
+  File: file1.txt
+  Size: 5         	Blocks: 8          IO Block: 4096   regular file
+Device: 254,1	Inode: 1177496     Links: 2
+Access: (0644/-rw-r--r--)  Uid: ( 1000/     tux)   Gid: ( 1000/     tux)
+Access: 2025-02-17 08:55:39.987803189 +0100
+Modify: 2025-02-12 13:09:04.146349786 +0100
+Change: 2025-02-24 17:31:49.220713220 +0100
+ Birth: 2025-02-12 11:45:38.078409807 +0100
+```
+Hardlinks werden im System verwendet, um Speicherplatz zu sparen z.B. für bestimmte Systemkommandos. Auch nutzen manche Backup Lösungen Hardlinks um inkrementelle Backups zu erstellen.
 
+## Netzwerkkonfiguration
 
+### Netzwerkkonfiguration abfragen
 
+Zur Abfrage und Manipulation der Netzwerkkonfiguration nutzen wir heutzutage das Kommando `ip`. Auf älteren Systemen sind evtl. noch die Tools `ifconfig` und `route` aus dem Paket `net-tools` installiert. Deren Funktionen sind komplett in `ip` enthalten.
 
+### IP-Adressen und Netzwerkinterfaces
 
+```bash
+ip addr show          # zeigt IP-Adressen aller Interfaces
+ip addr show eth0     # nur ein bestimmtes Interface
+ip a                  # Subkommandos können beliebig abgekürzt werden, solange sie weiterhin eindeutig sind
+```
+##### Beispiel-Ausgabe:
+```bash
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host noprefixroute
+       valid_lft forever preferred_lft forever
+2: enp1s0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 52:54:00:d8:b5:a6 brd ff:ff:ff:ff:ff:ff
+    altname enx525400d8b5a6
+    inet 192.168.100.154/24 brd 192.168.100.255 scope global dynamic noprefixroute enp1s0
+       valid_lft 2193sec preferred_lft 1549sec
+    inet6 fe80::d449:7028:92c:5663/64 scope link
+       valid_lft forever preferred_lft forever
+```
+Wir sehen hier IPv4-Adressen (z.B. 192.168.1.100) und IPv6-Adressen (z.B. fe80::...), Broadcast, CIDR etc.
 
+Auch eine wichtige Information ist `state UP` bzw. `state DOWN`. Einzelne Interfaces könnten auch ausgeschaltet sein (per Soft- oder Hardware).
 
+**Legacy Befehle:**
+```bash
+ifconfig              # zeigt alle Netzwerkinterfaces (veraltet)
+```
+### Routing-Informationen
 
+```bash
+ip route show         # zeigt wie Pakete geroutet werden
+ip route
+ip r
+```
+##### Beispiel-Ausgabe:
+```bash
+default via 192.168.100.1 dev enp1s0 proto dhcp src 192.168.100.154 metric 1002
+192.168.100.0/24 dev enp1s0 proto dhcp scope link src 192.168.100.154 metric 1002
+```
+Das Default-Gateway/Router (`default`) ist hier besonders wichtig - die Adresse, über die wir ins Internet kommen.
 
+Bei Problemen könnten wir also prüfen, ob überhaupt ein Default-Gateway angezeigt wird bzw. ob wir es erreichen/pingen können.
+
+**Legacy:**
+```bash
+route -n              # zeigt Routing-Tabelle
+```
+### System auf offene Ports prüfen
+
+```bash
+ss -tulpn              # schnellere Alternative zu netstat
+```
+
+**Klassisch:**
+```bash
+netstat -tulpn         # zeigt offene Ports und Verbindungen
+```
+Beide Tools zeigen offenen Ports auf dem eigenen System an. Nützlich, um zu schauen, auf welchem Port ein gewisser Dienst lauscht bzw. welche Ports überhaupt offen sind und ggf. geschlossen werden sollten.
+
+Erklärung der Optionen:
+```bash
+-t  # TCP
+-r  # UDP
+-l  # listen
+-p  # Port Number
+-n  # Name des Dienstes (Root-Rechte nötig)
+```
+
+## DNS-Konfiguration
+
+### IP Adresse einer Domain/URL anzeigen
+```bash
+host google.com       # fragt DNS-Server nach IP-Adresse von google.com
+```
+
+### Wichtige Konfigurationsdateien
+
+**/etc/resolv.conf** - DNS-Server-Konfiguration
+```bash
+cat /etc/resolv.conf
+# Zeigt z.B. nameserver-Einträge (DNS-Server)
+nameserver 1.1.1.1
+```
+**/etc/hosts** - Lokale Hostname-Auflösung
+```bash
+cat /etc/hosts
+# Manuelle Zuordnung von Hostnamen zu IP-Adressen
+# Hat Vorrang vor DNS
+# Vorläufer des DNS
+```
+
+### Netzwerkproblem diagnostizieren
+```bash
+# 1. IP-Konfiguration prüfen
+ip a
+
+# 2. Gateway erreichbar?
+ip route
+ping 192.168.1.1  # Gateway-IP
+
+# 3. DNS funktioniert?
+cat /etc/resolv.conf
+host google.com
+
+# 4. Internet erreichbar?
+ping 8.8.8.8      # Google DNS (direkt IP)
+ping google.com   # mit Namensauflösung
+```
+## Archivierung und Komprimierung
+
+### Archivierung mit `tar`
+
+*Archivierung* bezeichnet das Zusammenfassen **mehrerer** Dateien und Verzeichnisse in eine **einzige** Datei, ohne zwingende Kompression. Dadurch bleibt die ursprüngliche Struktur der Dateien erhalten, so können mehrere Dateien einfacher gespeichert oder übertragen werden.
+
+Unter Linux wird das Kommando `tar` (*Tape Archiver*) zur Archivierung verwendet. `tar` ist ein sehr altes Programm und die Syntax (freundlich ausgedrückt) etwas gewöhnungsbedürftig. Kurzoptionen haben oft keine direkte Entsprechung zu den Langoptionen.
+
+Ein `tar`-Archiv kann man sich mit dem Kommando `cat` anzeigen lassen:
+
+![Ausgabe tar Archiv mit cat](./images/ausgabe-tar-archiv-mit-cat.png)
+
+> [!NOTE]
+> Alle numerischen Angaben hier sind im *Oktalformat*. Dies hat historische Gründe. Möchte man den Zeitstempel umrechnen, kann man sich von der BASH helfen lassen:
+> ```bash
+> echo $(( 8#14757403716 ))
+> ```
+
+#### Einige wichtige Optioenen zu `tar`:
+
+>[!NOTE]
+> Bei `tar` ist die Option `-f` sehr wichtig. Damit müssen wir immer den Namen des Archivs angeben, mit dem wir arbeiten wollen. Die Option `-f` erwartet zwingend ein Argument (den Namen/Pfad zu einem Archiv. Der Name muss **direkt** hinter der Option folgen.
+
+**Beispiele:**
+```bash
+tar -cvf archive.tar file1 file2    # korrekt, funktioniert
+tar -tf archive.tar                 # korrekt, funktioniert
+tar -f archive.tar -cv file1 file2  # korrekt, funktioniert
+
+tar -cfv archive.tar file1 file2    # funktioniert NICHT
+tar -ft archive.tar                 # funktioniert NICHT
+```
+##### Archiv aus Dateien erstellen
+```bash
+tar -cf archive.tar file1.txt file2.txt file3.txt 
+tar --create --file archive.tar file1.txt file2.txt file3.txt 
+```
+##### Archiv aus einem Verzeichnis erstellen
+```bash
+tar -cf archive.tar /absolute/path/to/dir
+tar -cf archive.tar relativ/path/to/dir
+```
+> [!NOTE] 
+> Pfadangaben werden immer mit archiviert! Wir müssen uns also im Vorhinein Gedanken machen, ob wir einen relativen oder absoluten Pfad angeben.
+> Geben wir einen relativen Pfad an, so archiviert `tar` den Pfad auch als relativ.
+> Übergeben wir `tar` jedoch einen absoluten Pfad zu einem Verzeichnis (oder einer Datei), entfernt `tar` standardmässig den ersten `/` (`tar: Removing leading '/' from member names`) - `tar` macht also aus einem absoluten Pfad einen relativen Pfad. 
+> So verhindern wir, dass beim extrahieren des Archivs (versehentlich) ein Zielverzeichnis überschrieben wird.
+
+#### Archiv extrahieren
+```bash
+tar -xf archive.tar
+tar --extract --file archive.tar
+```
+#### einzelne Dateien aus Archiv extrahieren
+```bash
+tar -xf archive.tar file1.txt
+tar --extract --file archive.tar file1.txt
+```
+Um einzelne Dateien aus dem Archiv zu extrahieren, geben wir den Dateinamen nach dem Archivnamen an. Die Autocompletion mit Tab funktioniert hier!
+
+#### Die Option -v / --verbose gibt eine Rückmeldung darüber, was tar macht
+```bash
+tar -xvf archive.tar
+tar --extract --verbose --file archive.tar
+```
+#### Inhalt eines Archivs anzeigen/auflisten
+```bash
+tar -tf archiv.tar
+tar --list --file archive.tar
+
+tar -tvf archiv.tar
+tar --list --verbose --file archive.tar
+```
+`-t` steht hier für *Test* - wir testen den Inhalt des Archivs. Übergeben wir hier zusätzlich die Option `-v`, so gibt `tar` zusätzlich die Metainformationen zu einer Datei aus, analog zur Ausgabe von `ls -l`.
+
+#### Datei einem bestehenden Archiv hinzufügen
+```bash
+tar -rf archive.tar other_file.txt
+tar --append --file archive.tar other_file.txt
+```
+### Komprimierung mit `gzip`, `bzip2` und `xz`
+
+Durch die Komprimierung können wir **eine einzelne** Datei mit Hilfe bestimmter Algorithmen (verlustfrei) in ihrer Grösse verkleinern.
+
+*Analogie Komprimierung:* getrocknete Handtücher, die im Wasser wieder gross werden
+
+*Analogie Archivierung:* einzelne Blumen werden zu einem Strauss gebunden
+
+Um **mehrere** Dateien oder ganze Verzeichnisse zu komprimieren, müssen wir zusätzlich im Vorfeld die *Archivierung* anwenden. Bestimmte Programme in Windows-Systemen vereinen diese beiden Konzepte unter einer Haube. Wir müssen uns jedoch merken, dass dies grundsätzlich zwei komplett verschiedene Konzepte sind.
+
+Auch unter Linux ist es möglich beide Schritte auf einmal mit dem Kommando `tar` durchzuführen, dabei ruft `tar` im Hintergrund jedoch die jeweiligen Kommandos zur Komprimierung auf.
+
+Unter Linux nutzen wir standardmässig drei verschiedene Tools zur Komprimierung: `gzip`, `bzip2` und `xz`.
+
+>[!NOTE]
+> Sowohl bei der Komprimierung als auch bei der Dekomprimierung wird die jeweilige Originaldatei nicht behalten, sondern ersetzt.
+> Dies können wir mit der Option `-k` (`--keep`) umgehen.
+
+### Vergleich der drei Komprimierungsalgorithmen
+
+Vergleich der Geschwindigkeiten und resultierenden Grössen beim Komprimieren:
+
+![vergleich-komprimierung](./images/vergleich-komprimierung.png)
+Vergleich der Geschwindigkeiten beim Dekomprimieren:
+
+![vergleich-dekomprimierung](./images/vergleich-dekomprimierung.png)
+Zusammenfassend lassen sich folgende Aussagen über die drei Komprimierungsalgorithmen treffen:
+
+- `gzip` ist am schnellsten bei der Komprimierung, die komprimierte Datei ist aber nicht besonders klein
+- `bzip2` braucht lange für die Komprimierung und die Dekomprimierung, erzeugt aber eine ziemlich kleine Datei
+- `xz` braucht ziemlich lange bei der Komprimierung, liegt bei der Kompressionsrate zwischen den beiden anderen, ist aber sehr schnell bei der Dekomprimierung
+
+Es gibt also für alle drei bestimmte Anwendungsfälle, in denen sie ihre Stärken ausspielen können.
+
+>[!NOTE] 
+>Unser Beispiel begünstigt ältere Komprimierungsalgorithmen. In einem echten Beispiel würde `xz` auch die höchste Kompressionsrate erzielen. `xz` ist besonders auf die Komprimierung von Quellcode optimiert. Das schnellste Tool ist immer noch `gzip`, allerdings mit der "schlechtesten" Kompressionsrate.
+
+### Erstellen und Entpacken eines komprimierten Archivs direkt mit `tar`
+
+#### gzip komprimiertes Archiv erstellen
+```bash
+tar -czf archiv.tar.gz somdir/
+tar -czvf archiv.tar.gz somdir/     # verboser Output
+```
+`-z` ruft also `gzip` auf
+
+#### bzip2 komprimiertes Archiv erstellen
+```bash
+tar -cjf archiv.tar.bz2 somdir/
+tar -czjf archiv.tar.bz2 somdir/     # verboser Output
+```
+`-j` ruft also `bzip2` auf
+
+#### xz komprimiertes Archiv erstellen
+```bash
+tar -cJf archiv.tar.xz somdir/
+tar -cJvf archiv.tar.xz somdir/     # verboser Output
+```
+`-J` ruft also `xz` auf
+
+#### Komprimiertes Archiv entpacken
+##### mit gzip komprimiertes Archiv entpacken
+```bash
+tar -xzf archiv.tar.gz
+tar -xzvf archiv.tar.gz
+```
+##### mit bzip2 komprimiertes Archiv entpacken
+```bash
+tar -xjf archiv.tar.bz2
+tar -xzjf archiv.tar.bz2
+```
+##### mit xz komprimiertes Archiv entpacken
+```bash
+tar -xJf archiv.tar.xz
+tar -xJvf archiv.tar.xz
+```
+##### automatisch jeweiligen Algorithmus ermitteln, Archiv dekomprimieren und Dateien extrahieren
+```bash
+tar -xf archiv.tar.gz
+tar -xf archiv.tar.bz2
+tar -xf archiv.tar.xz
+```
+
+>[!NOTE]
+> Aktuelle Versionen von `tar` erkennen beim Extrahieren den verwendeten Komprimierungsalgorithmus automatisch (auch unabhängig von der Dateiendung). Dieser braucht also nicht zwingend mit angegeben zu werden. 
+
+#### Erklärung der Optionen:
+
+- `-c`, `--create`  erstellt ein neues Archiv
+- `-x`, `--extract`  entpackt ein Archiv
+- `-f`, `--file`  gibt den Dateinamen des Archivs an (immer direkt danach)
+ 
+- `-z`, `--gzip`  wendet gzip-Kompression an
+- `-j`, `--bzip2`  wendet bzip2-Kompression an
+- `-J`, `--xz`  wendet xz-Kompression an
 
