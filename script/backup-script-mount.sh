@@ -23,21 +23,28 @@
 # - [x] Backup nicht immer wieder überschreiben -> timestamp im Namen
 # - [x] Zusammenfassung: Wie viele Verzeichnisse/Dateien wurden gesichert
 # - [ ] zu sichernde Verzeichnisse im Backup-Namen
-# - [ ] Backup auf externen Datenträger
-#   - [ ] prüfen, ob dieser eingehangen ist
+# - [x] Backup auf externen Datenträger
+#   - [x] prüfen, ob dieser eingehangen ist
 
 #set -x
  
-DEST_DIR=/backups
 TIMESTAMP=$(date +%Y%m%d_%H%M)
 BACKUP_FILE=backup_home_$TIMESTAMP.tar
 DEFAULT_DIR_TO_BACKUP=/home/tux
 DIRS_TO_BACKUP=$@
+MOUNT_DIR=/mnt
+PARTITION_TO_MOUNT=/dev/vdb1
+DEST_DIR=$MOUNT_DIR/backups
 
 # Prüfen, ob Script mit Root-Rechten ausgeführt wird
 if [ $UID -ne 0 ]; then
 	echo ERROR: Dieses Script muss mit root Rechten ausgeführt werden
 	exit 1
+fi
+
+# Prüfen, ob Datenträger unter /mnt gemountet ist
+if [ $(mount | grep $MOUNT_DIR | grep $PARTITION_TO_MOUNT | wc -l) -ne 1 ]; then
+	mount $PARTITION_TO_MOUNT $MOUNT_DIR
 fi
 
 # Backups Verzeichnis erstellen falls es nicht existiert
